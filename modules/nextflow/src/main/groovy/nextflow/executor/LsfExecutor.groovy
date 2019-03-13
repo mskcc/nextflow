@@ -69,8 +69,9 @@ class LsfExecutor extends AbstractGridExecutor {
             // is divided by the number of used cpus (processes)
             if( task.config.cpus > 1 && !perJobMemLimit ) {
                 long bytes = mem.toBytes().intdiv(task.config.cpus as int)
+                String perJobMem = String.valueOf(MemoryUnit.of(mem.toBytes().intdiv(task.config.cpus as int)).toMega())
                 result << '-M' << String.valueOf(MemoryUnit.of(bytes).toMega())
-                result << '-R' << "select[mem>=${MemoryUnit.of(bytes).toMega()}] rusage[mem=${MemoryUnit.of(bytes).toMega()}]".toString()
+                result << '-R' << "select[mem>=${perJobMem}] rusage[mem=${perJobMem}]".toString()
             }
             else {
                 result << '-M' << String.valueOf(mem.toMega())
